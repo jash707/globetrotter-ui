@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "../hooks/useApi";
 import { motion, AnimatePresence } from "framer-motion";
+import { getAuth, signOut } from "firebase/auth";
 
 const Game = () => {
   const navigate = useNavigate();
@@ -85,8 +86,32 @@ const Game = () => {
     await refetch();
   };
 
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        localStorage.removeItem("score");
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
+  };
+
   return (
     <Box textAlign="center" mt={5}>
+      <Box position="absolute" top={16} right={16} display="flex" gap={2}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => navigate("/")}
+        >
+          Back to Home
+        </Button>
+        <Button variant="outlined" color="error" onClick={handleLogout}>
+          Logout
+        </Button>
+      </Box>
       {isFetching ? (
         <CircularProgress />
       ) : (
@@ -158,15 +183,6 @@ const Game = () => {
           <Typography variant="h6" mt={3}>
             Score: {score}
           </Typography>
-
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => navigate("/")}
-            sx={{ mt: 2 }}
-          >
-            Back to Home
-          </Button>
 
           {isCorrect && <Confetti />}
         </>

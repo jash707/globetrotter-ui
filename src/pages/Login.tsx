@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button, TextField, Box, Typography } from "@mui/material";
 import { loginUser } from "../api/auth";
 
@@ -57,6 +57,9 @@ const Login = () => {
       >
         {mutation.isPending ? "Logging in..." : "Login"}
       </Button>
+      <Typography variant="body2" mt={2}>
+        Don't have an account? <Link to="/signup">Sign up</Link>
+      </Typography>
     </Box>
   );
 };
